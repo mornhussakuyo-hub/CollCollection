@@ -431,6 +431,16 @@ button:active {
   border-left: 1px solid var(--line);
 }
 
+.all-missing {
+  padding: 18px 14px;
+  background: var(--missing-soft);
+  border: 1px solid #e4bb7d;
+  color: var(--missing);
+  font-size: 18px;
+  font-weight: 800;
+  text-align: center;
+}
+
 .item {
   min-width: 0;
   padding: 10px 11px;

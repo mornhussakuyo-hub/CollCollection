@@ -11,6 +11,7 @@ const activeFilters = document.querySelector("#activeFilters");
 const recordCount = document.querySelector("#recordCount");
 
 const MISSING_TEXT = "缺少数据";
+const ALL_MISSING_TEXT = "缺失所有数据";
 const primaryFields = ["上床下桌", "几人间", "宿舍空调", "独立卫浴", "洗衣机", "夜间断电", "夜间断网", "校园网速度"];
 const moreFields = [
   "洗澡热水时段",
@@ -163,7 +164,15 @@ function hasActiveFilter() {
   return Boolean(provinceSelect.value || citySelect.value || schoolInput.value.trim());
 }
 
+function hasAnyDetailData(row) {
+  return [...primaryFields, ...moreFields].some((field) => valueOf(row, field));
+}
+
 function renderDetailItems(row) {
+  if (!hasAnyDetailData(row)) {
+    return `<div class="all-missing">${ALL_MISSING_TEXT}</div>`;
+  }
+
   return [...primaryFields, ...moreFields]
     .map((field) => {
       const value = valueOf(row, field);
