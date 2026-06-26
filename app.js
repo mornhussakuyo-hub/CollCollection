@@ -9,7 +9,6 @@ const results = document.querySelector("#results");
 const resultCount = document.querySelector("#resultCount");
 const activeFilters = document.querySelector("#activeFilters");
 const recordCount = document.querySelector("#recordCount");
-const sourceName = document.querySelector("#sourceName");
 
 const MISSING_TEXT = "缺少数据";
 const primaryFields = ["上床下桌", "几人间", "宿舍空调", "独立卫浴", "洗衣机", "夜间断电", "夜间断网", "校园网速度"];
@@ -242,7 +241,6 @@ function reset() {
 }
 
 recordCount.textContent = `${schoolGroups.length} 所学校`;
-sourceName.textContent = "静态数据已整理";
 populateProvinces();
 populateCities();
 render();

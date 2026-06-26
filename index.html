@@ -15,7 +15,6 @@
         </div>
         <div class="source">
           <span id="recordCount">载入中</span>
-          <span id="sourceName">静态数据已整理</span>
         </div>
       </section>
 
@@ -27,21 +26,27 @@
         <div class="control-grid">
           <label class="field">
             <span>省份</span>
-            <select id="provinceSelect">
-              <option value="">全部省份</option>
-            </select>
+            <span class="select-box">
+              <select id="provinceSelect">
+                <option value="">全部省份</option>
+              </select>
+            </span>
           </label>
 
           <label class="field">
             <span>城市</span>
-            <select id="citySelect" disabled>
-              <option value="">全部城市</option>
-            </select>
+            <span class="select-box">
+              <select id="citySelect" disabled>
+                <option value="">全部城市</option>
+              </select>
+            </span>
           </label>
 
           <label class="field search-field">
             <span>学校名称</span>
-            <input id="schoolInput" type="search" placeholder="输入全称中的任意文字" autocomplete="off" />
+            <span class="search-box">
+              <input id="schoolInput" type="search" placeholder="输入全称中的任意文字" autocomplete="off" />
+            </span>
           </label>
         </div>
 
