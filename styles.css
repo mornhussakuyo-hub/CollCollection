@@ -75,6 +75,24 @@ h1 {
   letter-spacing: 0;
 }
 
+.repo-link {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.08);
+  color: #eef8f2;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.repo-link:hover {
+  background: #ffffff;
+  color: #203129;
+}
+
 .source {
   display: flex;
   align-items: center;
