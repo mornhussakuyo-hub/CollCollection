@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>全国大学宿舍情况查询</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">全国大学宿舍情况</p>
+          <h1>院校宿舍信息查询</h1>
+        </div>
+        <div class="source">
+          <span id="recordCount">载入中</span>
+          <span id="sourceName">静态数据已整理</span>
+        </div>
+      </section>
+
+      <section class="notice" aria-label="查询提醒">
+        <strong>查询提醒：</strong>同一学校的不同校区会显示在同一张学校结果卡片中，不会拆分为多个校区单独查询；数据仅供参考，请以学校最新公开信息为准。
+      </section>
+
+      <section class="query-panel" aria-label="查询条件">
+        <div class="control-grid">
+          <label class="field">
+            <span>省份</span>
+            <select id="provinceSelect">
+              <option value="">全部省份</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>城市</span>
+            <select id="citySelect" disabled>
+              <option value="">全部城市</option>
+            </select>
+          </label>
+
+          <label class="field search-field">
+            <span>学校名称</span>
+            <input id="schoolInput" type="search" placeholder="输入全称中的任意文字" autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="resetButton" type="button">重置</button>
+        </div>
+      </section>
+
+      <section class="result-head" aria-live="polite">
+        <div>
+          <span id="resultCount">等待查询</span>
+          <span id="activeFilters">未选择筛选条件</span>
+        </div>
+      </section>
+
+      <section id="results" class="results" aria-label="查询结果"></section>
+    </main>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
