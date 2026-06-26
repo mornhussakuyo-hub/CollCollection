@@ -12,6 +12,7 @@ const recordCount = document.querySelector("#recordCount");
 
 const MISSING_TEXT = "缺少数据";
 const ALL_MISSING_TEXT = "缺失所有数据";
+const FOREIGN_REGIONS = new Set(["马来西亚"]);
 const primaryFields = ["上床下桌", "几人间", "宿舍空调", "独立卫浴", "洗衣机", "夜间断电", "夜间断网", "校园网速度"];
 const moreFields = [
   "洗澡热水时段",
@@ -62,6 +63,17 @@ function canonicalSchoolName(name) {
 function campusFromSchoolName(name) {
   const match = name.match(/[（(]([^）)]*校区[^）)]*)[）)]/);
   return match ? match[1].trim() : "";
+}
+
+function displayProvince(row) {
+  const province = valueOf(row, "省份");
+  return FOREIGN_REGIONS.has(province) ? "外国" : province;
+}
+
+function displayCity(row) {
+  const province = valueOf(row, "省份");
+  const city = valueOf(row, "城市");
+  return FOREIGN_REGIONS.has(province) ? [province, city].filter(Boolean).join(" / ") : city;
 }
 
 function uniqueRows(rows) {
@@ -119,7 +131,7 @@ function highlight(value, query) {
 }
 
 function populateProvinces() {
-  unique(dedupedRows.map((row) => valueOf(row, "省份"))).forEach((province) => {
+  unique(dedupedRows.map(displayProvince)).forEach((province) => {
     provinceSelect.appendChild(option(province));
   });
 }
@@ -132,7 +144,7 @@ function populateCities() {
   if (!province) return;
 
   const cities = unique(
-    dedupedRows.filter((row) => valueOf(row, "省份") === province).map((row) => valueOf(row, "城市")),
+    dedupedRows.filter((row) => displayProvince(row) === province).map(displayCity),
   );
   cities.forEach((city) => citySelect.appendChild(option(city)));
 }
@@ -144,8 +156,8 @@ function currentMatches() {
 
   return schoolGroups.filter((group) => {
     return group.rows.some((row) => {
-      const byProvince = !province || valueOf(row, "省份") === province;
-      const byCity = !city || valueOf(row, "城市") === city;
+      const byProvince = !province || displayProvince(row) === province;
+      const byCity = !city || displayCity(row) === city;
       const bySchool = !query || valueOf(row, "院校名称").includes(query) || group.name.includes(query);
       return byProvince && byCity && bySchool;
     });
@@ -200,7 +212,12 @@ function renderGroupMeta(group) {
   const fields = ["省份", "城市", "层次", "性质", "城市类"];
   return fields
     .map((field) => {
-      const value = unique(group.rows.map((row) => valueOf(row, field))).join(" / ");
+      const values = group.rows.map((row) => {
+        if (field === "省份") return displayProvince(row);
+        if (field === "城市") return displayCity(row);
+        return valueOf(row, field);
+      });
+      const value = unique(values).join(" / ");
       return `<span class="tag${value ? "" : " is-missing"}"><b>${escapeHtml(field.replace("城市类", "城市等级"))}</b>${escapeHtml(displayValue(value))}</span>`;
     })
     .join("");
@@ -217,7 +234,7 @@ function renderRecord(row, groupSize, query) {
         groupSize > 1
           ? `<div class="record-title">
               <strong>${highlight(schoolName, query)}</strong>
-              <span>${escapeHtml(valueOf(row, "省份"))} / ${escapeHtml(valueOf(row, "城市"))}</span>
+              <span>${escapeHtml(displayProvince(row))} / ${escapeHtml(displayCity(row))}</span>
             </div>`
           : ""
       }
