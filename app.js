@@ -79,11 +79,34 @@ function buildSchoolGroups(rows) {
     const schoolName = valueOf(row, "院校名称");
     const canonicalName = canonicalSchoolName(schoolName) || schoolName;
     if (!groups.has(canonicalName)) {
-      groups.set(canonicalName, { name: canonicalName, rows: [] });
+      groups.set(canonicalName, { name: canonicalName, rows: [], rowKeys: new Map() });
     }
-    groups.get(canonicalName).rows.push(row);
+
+    const group = groups.get(canonicalName);
+    const rowKey = [valueOf(row, "省份"), valueOf(row, "城市"), valueOf(row, "院校地址")].join("\u001f");
+    const existingIndex = group.rowKeys.get(rowKey);
+    if (existingIndex === undefined) {
+      group.rowKeys.set(rowKey, group.rows.length);
+      group.rows.push(row);
+    } else {
+      group.rows[existingIndex] = mergeRows(group.rows[existingIndex], row);
+    }
   });
-  return [...groups.values()].sort((a, b) => a.name.localeCompare(b.name, "zh-Hans-CN"));
+
+  return [...groups.values()]
+    .map(({ name, rows }) => ({ name, rows }))
+    .sort((a, b) => a.name.localeCompare(b.name, "zh-Hans-CN"));
+}
+
+function mergeRows(baseRow, nextRow) {
+  return data.fields.map((_, index) => {
+    const baseValue = baseRow[index] || "";
+    const nextValue = nextRow[index] || "";
+    if (!baseValue) return nextValue;
+    if (!nextValue || nextValue === baseValue) return baseValue;
+
+    return unique(`${baseValue}；${nextValue}`.split(/[;；]/).map((value) => value.trim())).join("；");
+  });
 }
 
 function highlight(value, query) {
